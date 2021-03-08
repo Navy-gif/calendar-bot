@@ -1,0 +1,18 @@
+{
+  "name": "calendar-bot",
+  "version": "0.0.1",
+  "description": "Posts calendar entries from a calendar on a website",
+  "main": "index.js",
+  "repository": "https://github.com/Navy-gif/calendar-bot",
+  "author": "Navy <navydotgif@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "eslint": "^7.21.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "setup": "node setup.js"
+  }
+}
