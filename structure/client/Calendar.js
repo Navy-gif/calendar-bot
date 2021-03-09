@@ -15,8 +15,17 @@ class Calendar {
         this.calendar = await this.request(this.calendarURL);
         this.events = this.parseEvents();
         this.updated = Date.now();
+        this.calendar.events = this.events;
         require('fs').writeFileSync('./calendar.json', JSON.stringify(this.calendar));
         console.log(`Calendar updated.`);
+
+    }
+
+    async post() {
+
+        const now = Date.now();
+        const future = now + 24 * 60 * 60 * 1000;
+        const eventsToday = this.events.filter() //TODO: filter out events that happen today
 
     }
 
@@ -24,16 +33,20 @@ class Calendar {
 
         let { events } = this.calendar;
         events.forEach(event => {
-            event.timestamp = new Date(event.start).getTime();
+            event.timestamp = Date.parse(event.start);
         });
 
         events = events.filter(event => {
             const { repeat, timestamp } = event;
             const now = Date.now();
-            //console.log(repeat, timestamp, now, new Date(repeat.end))
+            console.log(repeat, timestamp, now, Date.parse(repeat.end));
+            console.log(now < timestamp, repeat.type !== "" && (Date.parse(repeat.end) || 0) > now, now < timestamp || repeat.type !== "" && (Date.parse(repeat.end) || 0) > now);
             // Needs some further logic fuckery to figure out repeating events
-            return now < timestamp || (repeat.type !== "" && new Date(repeat.end).getTime() > now);
+            return now < timestamp || repeat.type !== "" && (Date.parse(repeat.end) || 0) > now;
+            //TODO: store a timestamp for the next time an event occurs based on the repeat property
         });
+
+        return events;
 
     }
 
