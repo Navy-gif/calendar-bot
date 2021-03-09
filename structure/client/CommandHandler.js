@@ -8,8 +8,14 @@ class CommandHandler {
 
     async init() {
 
-        
+        this.client.on('message', this.handle.bind(this));
 
+    }
+
+    async handle(message) {
+
+        //console.log(message);
+        
     }
 
 }
