@@ -1,5 +1,6 @@
 const { Client } = require('discord.js');
 const { CommandHandler, Calendar } = require('./index.js');
+const scheduler = require('node-schedule');
 
 class CalendarBot extends Client {
 
@@ -24,6 +25,15 @@ class CalendarBot extends Client {
         await this.login(this._options.token);
         console.log(`Successfully logged in as ${this.user.tag}`);
         this.prefix = this._options.prefix;
+
+        this.scheduleJobs();
+
+    }
+
+    scheduleJobs() {
+
+        scheduler.scheduleJob(this._options.updateCalendarCron, this.calendar.update.bind(this.calendar));
+        scheduler.scheduleJob(this._options.postEventsCron, this.calendar.post.bind(this.calendar));
 
     }
 
