@@ -9,7 +9,8 @@
   "private": false,
   "dependencies": {
     "discord.js": "^12.5.1",
-    "eslint": "^7.21.0"
+    "eslint": "^7.21.0",
+    "node-schedule": "^2.0.0"
   },
   "scripts": {
     "start": "node index.js",
