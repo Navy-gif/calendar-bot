@@ -14,6 +14,8 @@ class Calendar {
         this.channelID = client._options.channel;
         this.calendarURL = client._options.calendarURL;
 
+        this.reminders = {};
+
     }
 
     async update() {
@@ -22,8 +24,9 @@ class Calendar {
         this.calendar = await this.request(this.calendarURL);
         this.events = this.parseEvents();
         this.updated = Date.now();
-        this.calendar.events = this.events;
-        require('fs').writeFileSync('./calendar.json', JSON.stringify(this.calendar));
+        //this.calendar.events = this.events;
+        console.log(this.eventsToday[0].categories);
+        //require('fs').writeFileSync('./calendar.json', JSON.stringify(this.calendar.events));
         console.log(`Calendar updated.`);
 
     }
@@ -33,7 +36,16 @@ class Calendar {
         //console.log(`Events today: ${JSON.stringify(eventsToday)}`);
 
         const channel = await this.client.channels.fetch(this.channelID);
-        await channel.send(`**Today's events**\n\`\`\`${JSON.stringify(this.eventsToday)}\`\`\``);
+
+        const embed = { fields: [], color: 0xd34144 };
+        this.eventsToday.forEach(event => {
+            embed.fields.push({
+                name: `${event.title}`,
+                value: `${event.desc.replace(/<\/?p>/g, '')}\n**Today at ${new Date(event.time).toTimeString()}**`
+            });
+        });
+
+        await channel.send(`**Today's events**`, { embed });
 
     }
 
@@ -93,12 +105,13 @@ class Calendar {
         });
 
         //Configure events for this day
-        this.eventsToday = this.events.filter(event => {
+        this.eventsToday = events.filter(event => {
             return event.timestamp > now && event.timestamp < future || event.repeat.type !== "" && event.repeat.next > now && event.repeat.next < future;
         });
         this.eventsToday.forEach(event => {
             const time = event.repeat?.next || event.timestamp;
-            event.reminder = setTimeout(this._oneHourReminder.bind(this), time - CONSTANTS.hour, event);
+            event.time = time;
+            this.reminders[time] = { timeout: setTimeout(this._oneHourReminder.bind(this), time - now - CONSTANTS.hour, event), event };
         });
 
         return events;
@@ -107,11 +120,28 @@ class Calendar {
 
     async _oneHourReminder(event) {
 
-        event.reminder = setTimeout(this._eventStart.bind(this), CONSTANTS.hour, event);
-        const channel = await this.client.channels.fetch(this.channelID);
+        
+        this.reminders[event.time] = { timeout: setTimeout(this._eventStart.bind(this), CONSTANTS.hour, event), event };
+        const channel = await this.client.channels.fetch(this.channelID).catch(console.error);
 
         const embed = {
-            title: `One hour reminder for **${event.title}**`
+            title: `One hour reminder for **${event.title}**`,
+            description: `${event.desc.replace(/<\/?p>/g, '')}`,
+            color: parseInt(event.categories[0].color.replace('#', ''), 16)
+        };
+
+        await channel.send({ embed });
+
+    }
+
+    async _eventStart(event) {
+
+        const channel = await this.client.channels.fetch(this.channelID).catch(console.error);
+        
+        const embed = {
+            title: `**EVENT START**`,
+            description: `${event.title} is starting now!`,
+            color: parseInt(event.categories[0].color.replace('#', ''), 16)
         };
 
         await channel.send({ embed });
