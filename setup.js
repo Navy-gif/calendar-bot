@@ -4,7 +4,14 @@ const fs = require('fs');
 const DEFAULT = {
     "prefix": "!!",
     "token": "REPLACE ME WITH THE CLIENT TOKEN",
-    "calendarURL": "REPLACE ME WITH THE CALENDAR JSON API URL"
+    "calendarURL": "REPLACE ME WITH THE CALENDAR JSON API URL",
+    "clientOptions": {
+
+    },
+    "channel": "REPLACE ME WITH CHANNEL ID",
+    "adminRoles": [],
+    "updateCalendarCron": "55 23 * * *",
+    "postEventsCron": "0 0 * * *"
 };
 
 if (!fs.existsSync('./config.json')) {
