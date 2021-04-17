@@ -125,7 +125,7 @@ class Calendar {
 
     async _oneHourReminder(event) {
 
-        
+        console.log(`Sending out one hour reminder.`);
         this.reminders[event.time] = { timeout: setTimeout(this._eventStart.bind(this), CONSTANTS.hour, event), event };
         const channel = await this.client.channels.fetch(this.channelID).catch(console.error);
 
@@ -141,6 +141,7 @@ class Calendar {
 
     async _eventStart(event) {
 
+        console.log(`Sending out event start.`);
         const channel = await this.client.channels.fetch(this.channelID).catch(console.error);
         
         const embed = {
