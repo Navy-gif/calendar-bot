@@ -11,7 +11,8 @@ const DEFAULT = {
     "channel": "REPLACE ME WITH CHANNEL ID",
     "adminRoles": [],
     "updateCalendarCron": "55 23 * * *",
-    "postEventsCron": "0 0 * * *"
+    "postEventsCron": "0 0 * * *",
+    "timeZoneOffset": "-07:00"
 };
 
 if (!fs.existsSync('./config.json')) {
