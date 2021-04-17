@@ -37,15 +37,20 @@ class Calendar {
 
         const channel = await this.client.channels.fetch(this.channelID);
 
-        const embed = { fields: [], color: 0xd34144 };
+        const embed = {
+            title: `**Today's events**`,
+            fields: [],
+            color: 0xd34144
+        };
+        
         this.eventsToday.forEach(event => {
             embed.fields.push({
                 name: `${event.title}`,
-                value: `${event.desc.replace(/<\/?p>/g, '')}\n**Today at ${new Date(event.time).toTimeString()}**`
+                value: `${event.desc.replace(/<\/?p>/g, '')}\nToday at **${new Date(event.time).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })}**`
             });
         });
 
-        await channel.send(`**Today's events**`, { embed });
+        await channel.send({ embed });
 
     }
 
@@ -58,7 +63,7 @@ class Calendar {
         // Add missing timestamps
         events.forEach(event => {
 
-            event.timestamp = Date.parse(event.start);
+            event.timestamp = Date.parse(event.start + this.client._options.timeZoneOffset);
             const { repeat, timestamp } = event;
 
             // Needs some further logic fuckery to figure out repeating events that don't have an end date
