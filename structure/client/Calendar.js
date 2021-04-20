@@ -131,8 +131,12 @@ class Calendar {
 
         const embed = {
             title: `One hour reminder for **${event.title}**`,
-            description: `${event.desc.replace(/<\/?p>/g, '')}`,
+            description: `${event.desc.replace(/<\/?p>/g, '').replace(/<\/br>/g, '\n\n')}`,
             color: parseInt(event.categories[0].color.replace('#', ''), 16)
+        };
+
+        if (event.image.length) embed.image = {
+            url: event.image
         };
 
         await channel.send({ embed });
@@ -142,6 +146,7 @@ class Calendar {
     async _eventStart(event) {
 
         console.log(`Sending out event start.`);
+        delete this.reminders[event.time];
         const channel = await this.client.channels.fetch(this.channelID).catch(console.error);
         
         const embed = {
