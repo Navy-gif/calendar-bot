@@ -12,6 +12,7 @@ class Calendar {
 
         this.client = client;
         this.channelID = client._options.channel;
+        this.roleID = client._options.notificationRole;
         this.calendarURL = client._options.calendarURL;
 
         this.reminders = {};
@@ -139,7 +140,7 @@ class Calendar {
             url: event.image
         };
 
-        await channel.send({ embed });
+        await channel.send({ content: `<@&${this.roleID}>`, embed });
 
     }
 
@@ -155,7 +156,7 @@ class Calendar {
             color: parseInt(event.categories[0].color.replace('#', ''), 16)
         };
 
-        await channel.send({ embed });
+        await channel.send({ content: `<@&${this.roleID}>`, embed });
 
     }
 

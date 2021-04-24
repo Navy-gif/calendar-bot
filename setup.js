@@ -12,7 +12,8 @@ const DEFAULT = {
     "adminRoles": [],
     "updateCalendarCron": "55 23 * * *",
     "postEventsCron": "0 0 * * *",
-    "timeZoneOffset": "-07:00"
+    "timeZoneOffset": "-07:00",
+    "notificationRole": "REPLACE ME WITH ROLE ID"
 };
 
 if (!fs.existsSync('./config.json')) {
