@@ -18,13 +18,16 @@ class CalendarBot extends Client {
 
         this.calendar = new Calendar(this);
         await this.calendar.update().catch(err => {
-            console.error(`Calendar update errored:\n${err}`);
+            console.error(`Calendar update errored:\n${err.stack}`);
         });
 
         console.log(`Logging in to Discord.`);
         await this.login(this._options.token);
-        console.log(`Successfully logged in as ${this.user.tag}`);
+        console.log(`Successfully logged in as ${this.user.tag}, invite: ${this.generateInvite()}`);
         this.prefix = this._options.prefix;
+        // this.calendar.post();
+        // this.calendar._oneHourReminder(this.calendar.eventsToday[0]);
+        // this.calendar._eventStart(this.calendar.eventsToday[0]);
 
         this.scheduleJobs();
 
