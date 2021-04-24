@@ -23,7 +23,8 @@ class CalendarBot extends Client {
 
         console.log(`Logging in to Discord.`);
         await this.login(this._options.token);
-        console.log(`Successfully logged in as ${this.user.tag}, invite: ${this.generateInvite()}`);
+        this.invite = await this.generateInvite();
+        console.log(`Successfully logged in as ${this.user.tag}, invite: ${this.invite}`);
         this.prefix = this._options.prefix;
         // this.calendar.post();
         // this.calendar._oneHourReminder(this.calendar.eventsToday[0]);
