@@ -132,7 +132,7 @@ class Calendar {
 
         const embed = {
             title: `One hour reminder for **${event.title}**`,
-            description: `${event.desc.replace(/<\/?p>/g, '').replace(/<\/br>/g, '\n\n')}`,
+            description: `${event.desc.replace(/<\/?p>/g, '').replace(/<\/?br>/g, '\n\n')}`,
             color: parseInt(event.categories[0].color.replace('#', ''), 16)
         };
 
