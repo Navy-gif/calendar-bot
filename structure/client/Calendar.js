@@ -47,7 +47,7 @@ class Calendar {
         this.eventsToday.forEach(event => {
             embed.fields.push({
                 name: `${event.title}`,
-                value: `${event.desc.replace(/<\/?p>/g, '')}\nToday at **${new Date(event.time).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })}**`
+                value: `${this._decodeEntities(event.desc.replace(/<\/?p>/g, '').replace(/<\/?br>/g, '\n\n'))}\nToday at **${new Date(event.time).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })}**`
             });
         });
 
@@ -132,7 +132,7 @@ class Calendar {
 
         const embed = {
             title: `One hour reminder for **${event.title}**`,
-            description: `${event.desc.replace(/<\/?p>/g, '').replace(/<\/?br>/g, '\n\n')}`,
+            description: `${this._decodeEntities(event.desc.replace(/<\/?p>/g, '').replace(/<\/?br>/g, '\n\n'))}`,
             color: parseInt(event.categories[0].color.replace('#', ''), 16)
         };
 
@@ -186,6 +186,22 @@ class Calendar {
 
         });
 
+    }
+
+    _decodeEntities(encodedString) {
+        const translate_re = /&(nbsp|amp|quot|lt|gt);/g;
+        const translate = {
+            "nbsp": " ",
+            "amp": "&",
+            "quot": "\"",
+            "lt": "<",
+            "gt": ">"
+        };
+        return encodedString.replace(translate_re, (match, entity) => {
+            return translate[entity];
+        }).replace(/&#(\d+);/gi, (match, numStr) => {
+            return String.fromCharCode(parseInt(numStr, 10));
+        });
     }
 
 }
